@@ -1,6 +1,8 @@
 package gestionefile;
 
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author Monni Leonardo
@@ -28,9 +30,22 @@ public class GestioneFile {
     
         
         //3) SCRITTURA
-        Scrittore scrittore = new Scrittore("output.csv", username,password);
+        Scrittore scrittore = new Scrittore("output.csv", username + ";" + password);
         Thread threadScrittore = new Thread(scrittore);
         threadScrittore.start();
+        try {
+            threadScrittore.join();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(GestioneFile.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        //4) COPIATURA 
+        Copiatore copiatore = new Copiatore("output.csv","copia.csv");
+        copiatore.start();
+        try {
+            copiatore.join();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(GestioneFile.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
 }
